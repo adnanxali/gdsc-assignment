@@ -7,8 +7,8 @@ const variantSchema= new Schema({
     color:String,
     material:String,
     description:String,
-    price:Number,
-})
+    price:Number
+},{ _id: false })
 
 const productSchema = new Schema({
     name:String,

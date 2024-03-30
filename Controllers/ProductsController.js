@@ -10,6 +10,7 @@ async function addProduct(req,res,next){
         res.json({
             msg:"Something wrong with inputs"
         })
+        return;
     }
     const name=req.body.name;
     const variant=req.body.variant;
@@ -75,8 +76,9 @@ async function searchProduct(req,res,next){
 }
 async function updateProduct(req,res,next){
     const updateVal=req.body;
+    console.log(req.params.id);
     try{
-        await Product.findByIdAndUpdate(req.params.id,updateVal).exec();
+        await Product.findByIdAndUpdate(req.params.id,updateVal);
         res.json({
             msg:"Product updated"
         })
@@ -88,7 +90,46 @@ async function updateProduct(req,res,next){
     }
 
 }
+async function getAllProducts(req,res,next){
+    const product = await Product.find();
+    if(product){
+        res.json(product);
+    }else{
+        res.json({
+            msg:"No products"
+        })
+    }
+}
+async function deleteProduct(req,res,next){
+    const name=req.body.name;
+    if(await Product.findOne({name:name})){
+        await Product.deleteMany({name:name});
+        res.json({
+            msg:`Deleted All ${name}`
+        })
+        return;
+    }else{
+        res.json({
+            msg:"Cannot find the product"
+        })
+    }
+}
+async function deleteVariant(req,res,next){
+    const id=req.params.id;
+    const variant=await Product.findById(id).exec();
+    if(variant){
+        await Product.findByIdAndDelete(id);
+        res.json({
+            msg:"Variant Deleted"
+        })
+        return;
+    }else{
+        res.json({
+            msg:"Variant Not found"
+        })
+    }
+}
 
 
 
-module.exports={addProduct,searchProduct,updateProduct}
+module.exports={addProduct,searchProduct,updateProduct,getAllProducts,deleteProduct,deleteVariant}
