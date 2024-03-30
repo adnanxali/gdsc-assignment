@@ -1,8 +1,14 @@
 const express= require('express');
 const app= express();
-const mongoose = require('mongoose');
+require('dotenv').config()
+const mongoose= require('mongoose');
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('Connected'))
+  .catch(err => console.error('Error', err));
 
-mongoose.connect('mongodb+srv://adnanxali:helloworld@cluster0.hjc7uzy.mongodb.net/productsdb');
 
 const routes=require('./routes/routes')
 app.use(express.json());
